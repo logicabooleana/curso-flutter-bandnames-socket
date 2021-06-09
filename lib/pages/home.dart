@@ -41,13 +41,28 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  ListTile bandTile(Band band) {
-    return ListTile(
-          leading: CircleAvatar(child: Text( band.name.substring(0,1) )),
-          title: Text(band.name),
-          trailing: Text("${band.botes}",style: TextStyle(fontSize: 18.0)),
-          onTap: (){ print(band.name);},
-        );
+  Widget bandTile(Band band) {
+    return Dismissible(
+      key: Key(band.id),
+      direction: DismissDirection.startToEnd,
+      onDismissed: (direction) {
+        bands.removeWhere((element) => element.id==band.id); 
+      },
+      background: Container(
+        padding: EdgeInsets.all(12.0),
+        color: Colors.red[300],
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text("Delete",style: TextStyle(color: Colors.white)),
+        ),
+      ),
+      child: ListTile(
+            leading: CircleAvatar(child: Text( band.name.substring(0,1) )),
+            title: Text(band.name),
+            trailing: Text("${band.botes}",style: TextStyle(fontSize: 18.0)),
+            onTap: (){ print(band.name);},
+          ),
+    );
   }
 
   addNewBand() async {
@@ -105,7 +120,7 @@ class _HomePageState extends State<HomePage> {
   void addBandToList({required String name}){
     if(name=="") return null;
     setState(() {
-      bands.add(Band(id:DateTime.now().toString(),name: name));
+      bands.add(Band(id:DateTime.now().toString(),name: name,botes: 0));
       Navigator.pop(context);
     });
   }
